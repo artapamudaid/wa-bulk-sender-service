@@ -22,8 +22,9 @@ export const pool = new Pool({
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
+  // Tambahkan 👇  jika pakai postgresql
+  options: '-c search_path=public'
 });
-
 
 pool.on("error", (err) => {
   logger.error("⚠️ Unexpected PG client error:", err);

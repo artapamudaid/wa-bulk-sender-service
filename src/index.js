@@ -15,10 +15,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const redisClient = new Redis({
-  host: "127.0.0.1", // sesuaikan
-  port: 6379,
-  // password: "password_redis_kamu", // kalau pakai password
+  host: process.env.REDIS_HOST || "127.0.0.1",
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASS || undefined, // <— optional
+  db: process.env.REDIS_DB || 0,
+  retryStrategy: (times) => Math.min(times * 50, 2000),
 });
+
+redisClient.on("connect", () => console.log("✅ Redis connected"));
+redisClient.on("error", (err) => console.error("❌ Redis error:", err));
 
 // 🛡️ Helmet — Security headers
 app.use(helmet());
